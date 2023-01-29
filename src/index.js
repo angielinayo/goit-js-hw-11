@@ -41,6 +41,7 @@ async function onSubmitForm(e) {
     } else {
       Notify.success(`Hooray! We found ${totalHits} images.`);
       renderMarkup(hits);
+
       loadMoreBtn.classList.remove('is-hidden');
       lightBox.refresh();
     }
@@ -63,6 +64,14 @@ async function onLoadMoreClick() {
       loadMoreBtn.classList.add('is-hidden');
     }
     renderMarkup(hits);
+    const { height: cardHeight } = document
+      .querySelector('.gallery')
+      .firstElementChild.getBoundingClientRect();
+
+    window.scrollBy({
+      top: cardHeight * 2.3,
+      behavior: 'smooth',
+    });
     loadMoreBtn.classList.remove('is-hidden');
     lightBox.refresh();
   } catch (err) {
