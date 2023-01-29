@@ -43,9 +43,10 @@
 }
 
 .load-more-button {
-  margin: 0;
+  display: block;
+  margin: auto;
   height: 50px;
-  min-width: 120px;
+  min-width: 150px;
   text-transform: uppercase;
   background-color: #ffeff3;
   font-weight: 500;
@@ -62,6 +63,6 @@
   color: #ffeff3;
 }
 
-.load-more.is-hidden {
+.load-more-button.is-hidden {
   display: none;
 }
