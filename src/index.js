@@ -15,14 +15,13 @@ const lightBox = new SimpleLightbox('.gallery a', {
 });
 
 refs.formEl.addEventListener('submit', onSubmitForm);
-loadMoreBtn.addEventListener('click', onLoadMoreClick);
 
 async function onSubmitForm(e) {
   e.preventDefault();
   pixabayApi.query = e.target.elements.searchQuery.value.trim();
 
   if (pixabayApi.query === '') {
-    Notify.info('Sorry, but something needs to be entered.');
+    Notify.info('Sorry, enter the search value.');
     return;
   }
 
@@ -38,43 +37,41 @@ async function onSubmitForm(e) {
       );
       loadMoreBtn.classList.add('is-hidden');
       return;
+    } else if (pixabayApi.page === Math.ceil(totalHits / 40)) {
+      Notify.failure(
+        "We're sorry, but you've reached the end of search results."
+      );
+      loadMoreBtn.classList.add('is-hidden');
+      renderMarkup(hits);
     } else {
       Notify.success(`Hooray! We found ${totalHits} images.`);
       renderMarkup(hits);
-
       loadMoreBtn.classList.remove('is-hidden');
       lightBox.refresh();
     }
   } catch (err) {
     console.log(err);
   }
-}
 
-async function onLoadMoreClick() {
-  loadMoreBtn.classList.add('is-hidden');
-  try {
-    const { hits, totalHits } = await pixabayApi.fetchPhotos();
-
-    if (hits.length < 40) {
-      Notify.failure(
-        "We're sorry, but you've reached the end of search results."
-      );
+  async function onLoadMoreClick() {
+    pixabayApi.incrementPage();
+    try {
+      const { hits, totalHits } = await pixabayApi.fetchPhotos();
 
       renderMarkup(hits);
-      loadMoreBtn.classList.add('is-hidden');
-    }
-    renderMarkup(hits);
-    const { height: cardHeight } = document
-      .querySelector('.gallery')
-      .firstElementChild.getBoundingClientRect();
+      const { height: cardHeight } = document
+        .querySelector('.gallery')
+        .firstElementChild.getBoundingClientRect();
 
-    window.scrollBy({
-      top: cardHeight * 2.3,
-      behavior: 'smooth',
-    });
-    loadMoreBtn.classList.remove('is-hidden');
-    lightBox.refresh();
-  } catch (err) {
-    console.log(err);
+      window.scrollBy({
+        top: cardHeight * 2.3,
+        behavior: 'smooth',
+      });
+      loadMoreBtn.classList.remove('is-hidden');
+      lightBox.refresh();
+    } catch (err) {
+      console.log(err);
+    }
   }
+  loadMoreBtn.addEventListener('click', onLoadMoreClick);
 }
