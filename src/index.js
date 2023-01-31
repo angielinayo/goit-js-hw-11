@@ -23,12 +23,12 @@ async function onSubmitForm(e) {
     Notify.info('Sorry, enter the search value.');
     return;
   }
+  pixabayApi.resetPage();
+  clear();
 
   try {
     const { hits, totalHits } = await pixabayApi.fetchPhotos();
     loadMoreBtn.classList.add('is-hidden');
-    pixabayApi.resetPage();
-    clear();
 
     if (totalHits === 0) {
       Notify.failure(
@@ -49,6 +49,7 @@ async function onSubmitForm(e) {
 
 async function onLoadMoreClick() {
   pixabayApi.incrementPage();
+
   try {
     const { hits, totalHits } = await pixabayApi.fetchPhotos();
     renderMarkup(hits);
@@ -57,10 +58,9 @@ async function onLoadMoreClick() {
         "We're sorry, but you've reached the end of search results."
       );
       loadMoreBtn.classList.add('is-hidden');
-      // renderMarkup(hits);
+      renderMarkup(hits);
       return;
     }
-
     const { height: cardHeight } = document
       .querySelector('.gallery')
       .firstElementChild.getBoundingClientRect();
@@ -70,7 +70,7 @@ async function onLoadMoreClick() {
     });
 
     // loadMoreBtn.classList.remove('is-hidden');
-    lightBox.refresh();
+    // lightBox.refresh();
   } catch (err) {
     console.log(err);
   }
