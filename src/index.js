@@ -37,11 +37,10 @@ async function onSubmitForm(e) {
       return;
     } else if (totalHits > 40) {
       Notify.success(`Hooray! We found ${totalHits} images.`);
-
       loadMoreBtn.classList.remove('is-hidden');
-      renderMarkup(hits);
-      lightBox.refresh();
     }
+    renderMarkup(hits);
+    lightBox.refresh();
   } catch (err) {
     console.log(err);
   }
