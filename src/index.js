@@ -18,7 +18,6 @@ loadMoreBtn.addEventListener('click', onLoadMoreClick);
 async function onSubmitForm(e) {
   e.preventDefault();
   pixabayApi.query = e.target.elements.searchQuery.value.trim();
-
   if (pixabayApi.query === '') {
     Notify.info('Sorry, enter the search value.');
     return;
